@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d14">
+<title>Claude Mission Control</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <div class="brand-symbol"><span class="brand-orbit"></span><span class="brand-core"></span></div>
+    <div class="rail-items">
+      <button class="rail-btn active" title="Mission Control" aria-label="Mission Control">◈</button>
+      <button class="rail-btn" id="rail-agents" title="Jump to agents" aria-label="Jump to agents">⬡</button>
+      <button class="rail-btn" id="rail-activity" title="Jump to activity" aria-label="Jump to activity">≋</button>
+    </div>
+    <div class="rail-bottom"><span class="rail-line"></span><span class="rail-version">MC<br>01</span></div>
+  </aside>
+  <div class="content-wrap">
+    <header class="topbar">
+      <div class="left-top"><span class="crumb">WORKSPACE</span><span class="crumb-sep">/</span><span class="crumb-current">MISSION CONTROL</span><span class="beta">v1.0.0</span></div>
+      <div class="top-actions">
+        <span id="connect-pill" class="connect-pill"><i></i><span>Connecting</span></span>
+        <button id="refresh" class="icon-btn" title="Refresh now" aria-label="Refresh now">↻</button>
+        <button id="demo" class="outline-btn">◉ Demo mode</button>
+      </div>
+    </header>
+    <main class="main">
+      <section class="hero">
+        <div class="eyebrow"><span class="dash"></span> AGENT OPERATIONS CENTER <span class="spark">✦</span></div>
+        <div class="hero-row">
+          <div><h1>Mission <em>Control<span class="period">.</span></em></h1><p class="subhead">A live command center for your Claude subagents. Know who's building what, at a glance.</p></div>
+          <div class="hero-side"><div class="clock" id="clock">--:--:--</div><div class="clock-label">LOCAL TIME <span id="clock-tz"></span></div></div>
+        </div>
+      </section>
+      <section class="control-row">
+        <div class="project-selector"><div class="project-icon">⌘</div><div class="project-detail"><span>MONITORING SESSION</span><select id="session-select" aria-label="Choose Claude session"><option value="">Finding sessions...</option></select></div><span class="select-arrow">⌄</span></div>
+        <div class="scan-pill"><span class="sweep"></span><div><strong id="scan-title">READ-ONLY MONITOR</strong><small id="scan-sub">Scanning local transcripts</small></div></div>
+      </section>
+      <div class="notice hidden" id="notice"></div>
+      <section class="stat-grid" aria-label="Metrics">
+        <div class="stat-card"><div class="stat-top"><span>OBSERVED AGENTS</span><span class="stat-icon purple">⬡</span></div><div class="stat-value" id="agent-count">—</div><div class="stat-foot" id="agent-foot">Subagents detected</div><div class="stat-trace trace-one"></div></div>
+        <div class="stat-card"><div class="stat-top"><span>RUNNING / RECENT</span><span class="stat-icon green">◉</span></div><div class="stat-value" id="active-count">—</div><div class="stat-foot"><span class="tiny-led"></span><span id="active-foot">Awaiting local activity</span></div><div class="stat-trace trace-two"></div></div>
+        <div class="stat-card"><div class="stat-top"><span>TOKENS OBSERVED</span><span class="stat-icon blue">◈</span></div><div class="stat-value" id="token-count">—</div><div class="stat-foot" id="token-foot">Input, output &amp; cache</div><div class="stat-trace trace-three"></div></div>
+        <div class="stat-card"><div class="stat-top"><span>RECORDED TOOL CALLS</span><span class="stat-icon orange">⚡</span></div><div class="stat-value" id="tool-count">—</div><div class="stat-foot" id="tool-foot">Across the current session</div><div class="stat-trace trace-four"></div></div>
+      </section>
+      <div class="section-heading agents-heading" id="agents-anchor"><div><span class="section-index">01 — AGENT FLEET</span><h2>Agents <span class="light-title">at work</span> <span id="agent-tag" class="count-tag">0</span></h2></div><div class="segmented"><button class="seg selected" data-filter="all">All agents</button><button class="seg" data-filter="running">Active</button><button class="seg" data-filter="done">Completed</button></div></div>
+      <section class="agent-grid" id="agent-grid"><div class="empty-card">Waiting for agent data…</div></section>
+      <section class="bottom-grid">
+        <div class="panel timeline-panel" id="activity-anchor">
+          <div class="panel-top"><div><div class="section-index">02 — ACTIVITY STREAM</div><h3>Live activity <span class="light-title">feed</span></h3></div><div class="stream-tag"><span></span> <span id="stream-label">REFRESHING</span></div></div>
+          <div class="feed" id="feed"><div class="empty-inline">Waiting for events…</div></div>
+          <div class="panel-foot"><span>RECENT OBSERVED TOOL EVENTS</span><span id="event-count">0 EVENTS</span></div>
+        </div>
+        <div class="side-stack">
+          <div class="panel tasks-panel"><div class="panel-top"><div><div class="section-index">03 — EXECUTION</div><h3>Task <span class="light-title">progress</span></h3></div><span class="panel-icon">◫</span></div><div class="task-summary"><strong id="task-percent">—</strong><span id="task-count">No tracked tasks</span></div><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div><div class="task-list" id="task-list"><p>No task list detected. Claude needs to create tasks before progress can be calculated.</p></div></div>
+          <div class="panel usage-panel"><div class="panel-top"><div><div class="section-index">04 — RESOURCES</div><h3>Token <span class="light-title">breakdown</span></h3></div><span class="panel-icon">⦿</span></div><div class="usage-content"><div class="donut" id="donut"><div class="donut-hole"><span>ALL TOKENS</span><strong id="donut-total">—</strong></div></div><div class="usage-legend" id="legend"></div></div><div class="usage-footnote">Reported token totals from local transcripts, not a billing or cost estimate.</div></div>
+        </div>
+      </section>
+      <footer class="footer"><span><span class="footer-diamond">✦</span> CLAUDE MISSION CONTROL <span class="footer-muted">/ local observer</span></span><span class="footer-muted">Read-only · No cloud sync · <span id="updated-at">Not connected</span></span></footer>
+    </main>
+  </div>
+  <aside class="inspector" id="inspector" aria-label="Agent inspector"><div class="inspect-top"><div class="section-index">AGENT DETAILS</div><button id="close-inspector" title="Close details" aria-label="Close details" class="icon-btn">×</button></div><div id="inspector-content"></div></aside>
+</div>
+<script src="app.js" defer></script>
+</body>
+</html>
